@@ -12,7 +12,15 @@
 shinyServer(
   function(input, output, session) {
     
-    
+    # Show disclaimer on app startup
+    observe({
+      showNotification(id = "disclaimer", ui = div(h1("Disclaimer"), includeMarkdown("./www/markdown/disclaimer.md")), 
+                       duration = NULL, closeButton = FALSE, type = "message", action = actionButton("understand", "I understand and wish to continue."))
+    }) 
+    observeEvent(input$understand, {
+        removeNotification("disclaimer")
+    })
+
     # help videos
     observeEvent(input$help_video_welcome, {
       showModal(modalDialog(

@@ -19,7 +19,6 @@ sidebar <- dashboardSidebar(width = 250,
                             
                             # menu
                             sidebarMenu(id='menu',
-                                        menuItem("Disclaimer", tabName = "note"),
                                         menuItem("What is METCAP?", tabName = "welcome", icon=icon("info-circle")),
                                         menuItem("Baseline Data: Data Collation", tabName = 'data', icon = icon("database")),
                                         menuItem("Model Stage 1: Build Estimates", tabName = 'model1', icon = icon("sliders")),
@@ -46,8 +45,7 @@ sidebar <- dashboardSidebar(width = 250,
 body <- dashboardBody(
   tabItems(
     tabItem(tabName = "note",
-    tags$h1("Note: this model is a beta version")),
-    
+            includeMarkdown('./www/markdown/disclaimer.md')),
     tabItem(tabName = "welcome",
             fluidRow(
               includeCSS("./www/styles.css"),
