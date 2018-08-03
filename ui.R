@@ -45,7 +45,8 @@ sidebar <- dashboardSidebar(width = 250,
 body <- dashboardBody(
   tabItems(
     tabItem(tabName = "note",
-            includeMarkdown('./www/markdown/disclaimer.md')),
+            includeMarkdown('./www/markdown/disclaimer.md')
+            ),
     tabItem(tabName = "welcome",
             fluidRow(
               includeCSS("./www/styles.css"),

@@ -14,7 +14,7 @@ shinyServer(
     
     # Show disclaimer on app startup
     observe({
-      showNotification(id = "disclaimer", ui = div(h1("Disclaimer"), includeMarkdown("./www/markdown/disclaimer.md")), 
+      showNotification(id = "disclaimer", ui = div(h1("Disclaimer"), includeMarkdown("./www/markdown/disclaimer.md"), p("PLEASE NOTE: This app may time-out if left idle too long, which will cause the screen to grey-out. To use the app again, refresh the page. This will reset all previously-selected input options.")), 
                        duration = NULL, closeButton = FALSE, type = "message", action = actionButton("understand", "I understand and wish to continue."))
     }) 
     observeEvent(input$understand, {
