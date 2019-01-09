@@ -469,7 +469,7 @@ shinyServer(
         
         
         # depending on selected scale/indicator, customisation of the plot
-        if(input$scale=='Absolute numbers' & input$prediction %in% c('Reported Pf + Mix Pf/Pv Cases', 'Estimated Incidence Pf + Pv + Mix Pf/Pv')){
+        if(input$scale=='Absolute numbers' & input$prediction %in% c('Reported Incidence Pf + Pv + Mix Pf/Pv', 'Estimated Incidence Pf + Pv + Mix Pf/Pv')){
           return(
             g + 
               geom_line(aes(y=Median)) +
@@ -478,7 +478,7 @@ shinyServer(
               labs(subtitle=paste0('Model Prediction, ', input$scale))
           )}
         
-        if(input$scale=='Absolute numbers' & !input$prediction %in% c('Reported Pf + Mix Pf/Pv Cases', 'Estimated Incidence Pf + Pv + Mix Pf/Pv')){
+        if(input$scale=='Absolute numbers' & !input$prediction %in% c('Reported Incidence Pf + Pv + Mix Pf/Pv', 'Estimated Incidence Pf + Pv + Mix Pf/Pv')){
           return(
             g + 
               geom_line(aes(y=Median)) +
@@ -486,7 +486,7 @@ shinyServer(
               labs(subtitle=paste0('Model Prediction, ', input$scale))
           )}
         
-        if(input$scale=='Log scale' & input$prediction %in% c('Reported Pf + Mix Pf/Pv Cases', 'Estimated Incidence Pf + Pv + Mix Pf/Pv')){
+        if(input$scale=='Log scale' & input$prediction %in% c('Reported Incidence Pf + Pv + Mix Pf/Pv', 'Estimated Incidence Pf + Pv + Mix Pf/Pv')){
           return(
             g +
               geom_line(aes(y=Median_Log)) +
@@ -496,7 +496,7 @@ shinyServer(
               labs(subtitle=paste0('Model Prediction, ', input$scale,  ' per 1,000 population at risk'))
           )}
         
-        if(input$scale=='Log scale' & !input$prediction %in% c('Reported Pf + Mix Pf/Pv Cases', 'Estimated Incidence Pf + Pv + Mix Pf/Pv')){
+        if(input$scale=='Log scale' & !input$prediction %in% c('Reported Incidence Pf + Pv + Mix Pf/Pv', 'Estimated Incidence Pf + Pv + Mix Pf/Pv')){
           return(
             g +
               geom_line(aes(y=Median_Log)) +
