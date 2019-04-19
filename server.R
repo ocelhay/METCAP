@@ -436,13 +436,10 @@ shinyServer(
     # grid of countries
     output$ts_model2_grid <- renderPlot({
       
-      
-      
       # take dependancy
       input$goButton
       
       isolate({
-        
         if(length(input$countries)==0 | input$goButton==0) return(NULL)
         # call to model
         df <- model %>% filter(country %in% input$countries, 
