@@ -10,7 +10,6 @@ rm(list = ls())
 
 # load packages
 library(DT)
-library(knitr)
 library(leaflet)
 library(RColorBrewer)
 library(scales)

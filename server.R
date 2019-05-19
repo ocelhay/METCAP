@@ -18,9 +18,9 @@ shinyServer(
                        duration = NULL, closeButton = FALSE, type = "message", action = actionButton("understand", "I understand and wish to continue."))
     }) 
     observeEvent(input$understand, {
-        removeNotification("disclaimer")
+      removeNotification("disclaimer")
     })
-
+    
     # help videos
     observeEvent(input$help_video_welcome, {
       showModal(modalDialog(
@@ -162,7 +162,7 @@ shinyServer(
     # map of selected countries
     map_dist <- reactive({
       shp_APLMA_sub <- shp_APLMA_sub() 
-      shp_APLMA_sub@data <- shp_APLMA_sub@data %>% mutate_(indicator=input$indicator_map)
+      shp_APLMA_sub@data <- shp_APLMA_sub@data %>% mutate_(indicator = input$indicator_map)
       shp_APLMA_sub$popup <- paste0('<em>', shp_APLMA_sub$country, '</em><br>',
                                     'Population At Risk: ', format(shp_APLMA_sub$population_at_risk, big.mark=','), '<br>',
                                     'G6PD Deficiency Rate: ', shp_APLMA_sub$G6PD_rates, '<br>',
@@ -203,7 +203,7 @@ shinyServer(
       ggplot(df, aes(year, total)) +
         geom_line() + geom_point() +
         ggtitle('All selected countries') +
-        scale_y_continuous(labels = comma) +
+        scale_y_continuous(labels = comma, limits = c(0, NA)) +
         theme_bw() + theme(axis.title=element_blank(), axis.text=element_text(size = 12))
     })
     
@@ -216,7 +216,7 @@ shinyServer(
         ggplot(data_year %>% filter(indic==input$indicator_ts, country %in% input$countries), 
                aes(year, total/100)) +
           geom_line() + geom_point() +
-          scale_y_continuous(labels = scales::percent) +
+          scale_y_continuous(labels = scales::percent, limits = c(0, NA)) +
           facet_wrap(~country, scale='free_y') +
           theme_bw() + theme(axis.title=element_blank(), axis.text=element_text(size = 12))
       })
@@ -224,7 +224,7 @@ shinyServer(
       ggplot(data_year %>% filter(indic==input$indicator_ts, country %in% input$countries), 
              aes(year, total)) +
         geom_line() + geom_point() +
-        scale_y_continuous(labels = comma) +
+        scale_y_continuous(labels = comma, limits = c(0, NA)) +
         facet_wrap(~country, scale='free_y') +
         theme_bw() + theme(axis.title=element_blank(), axis.text=element_text(size = 12))
       
@@ -237,7 +237,7 @@ shinyServer(
     # map
     map_dist_model1 <- reactive({
       shp_APLMA_sub <- shp_APLMA_sub() 
-      shp_APLMA_sub@data <- shp_APLMA_sub@data %>% mutate_(indicator=input$indicator_map_model1)
+      shp_APLMA_sub@data <- shp_APLMA_sub@data %>% mutate_(indicator = input$indicator_map_model1)
       shp_APLMA_sub$popup <- paste0('<em>', shp_APLMA_sub$country, '</em><br><br>',
                                     'Health Seeking Proportions:',
                                     '<ul>',
@@ -574,37 +574,79 @@ shinyServer(
         text(1, 1, 'Reverse 2 shows the predicted impact of stopping ITN activities \n and scaling up ITN is not allowed for this scenario.', cex=2)
       })}
       
+      df$pos[is.na(df$elim_obs_year)] <- rev(1:length(df$pos[is.na(df$elim_obs_year)]))
+      df$pos[!is.na(df$elim_obs_year)] <- rev(1.4 * 1:length(df$pos[!is.na(df$elim_obs_year)]))
       
+      rg <- diff(range(df$pos))
       
       if(input$elimination_type=='elim_obs_year'){
         
+        df$pos[is.na(df$elim_obs_year)] <- rev(1:length(df$pos[is.na(df$elim_obs_year)]))
+        df$pos[!is.na(df$elim_obs_year)] <- rev(1.4 * 1:length(df$pos[!is.na(df$elim_obs_year)]))
+        
         return(
+          # ggplot(data=df, aes(x=elim_obs_year)) +
+          #   geom_label(data=df, aes(x=elim_obs_year, y=pos, label=country), color='black', fill='grey', size=6, show.legend = FALSE) +
+          #   geom_label(data=df, aes(x=elim_obs_year, y=pos-1.5, label=elim_range), color='black', fill='grey', alpha=0.4, size=4, show.legend = FALSE) +
+          #   geom_label(data=df %>% filter(is.na(elim_obs_year)), aes(x=never, y=pos, label=country), color='black', fill='red', alpha=0.4, size=6, show.legend = FALSE) +
+          #   geom_label(data=df %>% filter(is.na(elim_obs_year)), aes(x=never, y=pos-1.5, label=lab_never), color='black', fill='red', alpha=0.4, size=4, show.legend = FALSE) +
+          #   scale_x_continuous(limits = c(2010, 2035), breaks=c(2015, 2020, 2025, 2030)) +
+          #   geom_vline(aes(xintercept=2030), color='blue', lty=2) +
+          #   scale_y_continuous(breaks=NULL) +
+          #   theme_light() + theme(axis.text.y=element_blank(), axis.text.x = element_text(size=13), panel.border = element_blank()) +
+          #   labs(x=NULL, y=NULL)
+          
+          
+          
           ggplot(data=df, aes(x=elim_obs_year)) +
-            geom_label(data=df, aes(x=elim_obs_year, y=pos, label=country), color='black', fill='grey', size=6, show.legend = FALSE) +
-            geom_label(data=df, aes(x=elim_obs_year, y=pos-1.5, label=elim_range), color='black', fill='grey', alpha=0.4, size=4, show.legend = FALSE) +
-            geom_label(data=df %>% filter(is.na(elim_obs_year)), aes(x=never, y=pos, label=country), color='black', fill='red', alpha=0.4, size=6, show.legend = FALSE) +
-            geom_label(data=df %>% filter(is.na(elim_obs_year)), aes(x=never, y=pos-1.5, label=lab_never), color='black', fill='red', alpha=0.4, size=4, show.legend = FALSE) +
-            scale_x_continuous(limits = c(2010, 2035), breaks=c(2015, 2020, 2025, 2030)) +
-            geom_vline(aes(xintercept=2030), color='blue', lty=2) +
+            geom_label(data=df, aes(x=elim_obs_year, y = pos, label=country), color='black', fill='grey', size=6, show.legend = FALSE) +
+            geom_label(data=df, aes(x=elim_obs_year, y = pos - rg/28, label=elim_range), color='black', fill='grey', alpha=0.4, size=4, show.legend = FALSE) +
+            
+            geom_label(data=df %>% filter(is.na(elim_obs_year)), aes(x=never, y=pos, label=country), 
+                       color='black', fill='red', alpha=0.4, size=6, show.legend = FALSE, hjust = 0) +
+            # geom_label(data=df %>% filter(is.na(elim_obs_year)), aes(x=never, y=pos-1.5, label=lab_never), color='black', fill='red', alpha=0.4, size=4, show.legend = FALSE) +
+            scale_x_continuous(limits = c(2010, 2045), breaks=c(2015, 2020, 2025, 2030)) +
+            geom_vline(aes(xintercept=2030), color='red', lty=2) +
             scale_y_continuous(breaks=NULL) +
             theme_light() + theme(axis.text.y=element_blank(), axis.text.x = element_text(size=13), panel.border = element_blank()) +
             labs(x=NULL, y=NULL)
+          
+          
+          
         )
       }
       
       if(input$elimination_type=='elim_clinical_year'){
         
+        df$pos[is.na(df$elim_clinical_year)] <- rev(1:length(df$pos[is.na(df$elim_clinical_year)]))
+        df$pos[!is.na(df$elim_clinical_year)] <- rev(1.4 * 1:length(df$pos[!is.na(df$elim_clinical_year)]))
+        
         return(
+          # ggplot(data=df, aes(x=elim_clinical_year)) +
+          #   geom_label(data=df, aes(x=elim_clinical_year, y=pos, label=country), color='black', fill='grey', size=6, show.legend = FALSE) +
+          #   geom_label(data=df, aes(x=elim_clinical_year, y=pos-1.5, label=elim_clinical_year), color='black', fill='grey', alpha=0.4, size=4, show.legend = FALSE) +
+          #   geom_label(data=df %>% filter(is.na(elim_clinical_year)), aes(x=never, y=pos, label=country), color='black', fill='red', alpha=0.4, size=6, show.legend = FALSE) +
+          #   geom_label(data=df %>% filter(is.na(elim_clinical_year)), aes(x=never, y=pos-1.5, label=lab_never), color='black', fill='red', alpha=0.4, size=4, show.legend = FALSE) +
+          #   scale_x_continuous(limits = c(2010, 2035), breaks=c(2015, 2020, 2025, 2030)) +
+          #   geom_vline(aes(xintercept=2030), color='blue', lty=2) +
+          #   scale_y_continuous(breaks=NULL) +
+          #   theme_light() + theme(axis.text.y=element_blank(), axis.text.x = element_text(size=13), panel.border = element_blank()) +
+          #   labs(x=NULL, y=NULL)
+          
+          
           ggplot(data=df, aes(x=elim_clinical_year)) +
             geom_label(data=df, aes(x=elim_clinical_year, y=pos, label=country), color='black', fill='grey', size=6, show.legend = FALSE) +
-            geom_label(data=df, aes(x=elim_clinical_year, y=pos-1.5, label=elim_clinical_year), color='black', fill='grey', alpha=0.4, size=4, show.legend = FALSE) +
-            geom_label(data=df %>% filter(is.na(elim_clinical_year)), aes(x=never, y=pos, label=country), color='black', fill='red', alpha=0.4, size=6, show.legend = FALSE) +
-            geom_label(data=df %>% filter(is.na(elim_clinical_year)), aes(x=never, y=pos-1.5, label=lab_never), color='black', fill='red', alpha=0.4, size=4, show.legend = FALSE) +
-            scale_x_continuous(limits = c(2010, 2035), breaks=c(2015, 2020, 2025, 2030)) +
-            geom_vline(aes(xintercept=2030), color='blue', lty=2) +
+            geom_label(data=df, aes(x=elim_clinical_year, y=pos - rg/28, label=elim_range), color='black', fill='grey', alpha=0.4, size=4, show.legend = FALSE) +
+            
+            geom_label(data=df %>% filter(is.na(elim_clinical_year)), aes(x=never, y=pos, label=country), 
+                       color='black', fill='red', alpha=0.4, size=6, show.legend = FALSE, hjust = 0) +
+            # geom_label(data=df %>% filter(is.na(elim_clinical_year)), aes(x=never, y=pos-1.5, label=lab_never), color='black', fill='red', alpha=0.4, size=4, show.legend = FALSE) +
+            scale_x_continuous(limits = c(2010, 2045), breaks=c(2015, 2020, 2025, 2030)) +
+            geom_vline(aes(xintercept=2030), color='red', lty=2) +
             scale_y_continuous(breaks=NULL) +
             theme_light() + theme(axis.text.y=element_blank(), axis.text.x = element_text(size=13), panel.border = element_blank()) +
             labs(x=NULL, y=NULL)
+          
         )
       }
       
@@ -670,19 +712,20 @@ shinyServer(
     # summary with total cost for the whole area/region
     output$total_pop_risk <- renderText(
       c(
-        '<h4>Total Population at Risk:</h4>',
+        '<h4>Costs for Whole Population:</h4>',
         paste0('Total median cost for selected country(ies): ', dollar(round(sum(df_costs()$cost_med), -5)), "<br>"),
         paste0('[Min - Max]: [', dollar(round(sum(df_costs()$cost_min), -5)), ' - ', dollar(round(sum((df_costs()$cost_max), -5))), ']'),
         '<br><br>'
       ))
     
     # summary with target population at risk
-    output$total_target_pop_risk <- renderText(c(
-      '<h4>Targeted Population at Risk:</h4>',
-      paste0('Total median cost for selected country(ies): ', dollar(round(sum(df_costs()$cost_med_focus), -5)), "<br>"),
-      paste0('[Min - Max]: [', dollar(round(sum(df_costs()$cost_min_focus), -5)), ' - ', dollar(round(sum((df_costs()$cost_max_focus), -5))), ']'),
-      '<br><br>'
-    ))
+    output$total_target_pop_risk <- renderText(
+      c(
+        '<h4>Costs for Population at Risk:</h4>',
+        paste0('Total median cost for selected country(ies): ', dollar(round(sum(df_costs()$cost_med_focus), -5)), "<br>"),
+        paste0('[Min - Max]: [', dollar(round(sum(df_costs()$cost_min_focus), -5)), ' - ', dollar(round(sum((df_costs()$cost_max_focus), -5))), ']'),
+        '<br><br>'
+      ))
     
     # upper limit of the y axis for the boxplot
     cost_max_country <- reactive(
@@ -793,7 +836,7 @@ shinyServer(
     
     # Summary with total cost for the whole area/region
     output$total_pop_risk_mep <- renderText(c(
-      '<h4>Total Population at Risk:</h4>',
+      '<h4>Costs for Population at Risk:</h4>',
       paste0('Total median cost for selected country(ies): ', dollar(round(sum(df_costs_mep()$cost_med), -5)), "<br>"),
       paste0('[Min - Max]: [', dollar(round(sum(df_costs_mep()$cost_min), -5)), ' - ', dollar(round(sum((df_costs_mep()$cost_max), -5))), ']'),
       '<br><br>'

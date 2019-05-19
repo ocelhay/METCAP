@@ -118,8 +118,8 @@ body <- dashboardBody(
                                                      'Population At Risk (Low Transmission)' = 'pop-risk-low'
                                                    )),
                                                  selected='nc-pf'),
-                                     plotOutput('ts_data_all'),
-                                     plotOutput('ts_data'))
+                                     plotOutput('ts_data_all') %>% withSpinner(),
+                                     plotOutput('ts_data') %>% withSpinner())
                      )
               ))),
     
@@ -151,7 +151,7 @@ body <- dashboardBody(
                                      HTML('<h3>Estimated Clinical Pf burden</h3>'),
                                      plotOutput('ts_model1_pf') %>% withSpinner(),
                                      HTML('<h3>Estimated Clinical Pv burden</h3>'),
-                                     plotOutput('ts_model1_pv')),
+                                     plotOutput('ts_model1_pv') %>% withSpinner()),
                             tabPanel('Model Calibration',
                                      fluidRow(
                                        column(width=12,
@@ -160,7 +160,7 @@ body <- dashboardBody(
                                               HTML('<h3>Model Calibration for Pf</h3>'),
                                               plotOutput('model_calibration_pf') %>% withSpinner(),
                                               HTML('<h3>Model Calibration for Pv</h3>'),
-                                              plotOutput('model_calibration_pv')
+                                              plotOutput('model_calibration_pv') %>% withSpinner()
                                        )))
                             
                             
@@ -240,7 +240,7 @@ body <- dashboardBody(
                                        column(width=12,
                                               plotOutput('ts_model2_global', height=600) %>% withSpinner(),
                                               HTML('<br><br>'),
-                                              plotOutput('ts_model2_grid', height=600)
+                                              plotOutput('ts_model2_grid', height=600) %>% withSpinner()
                                        ))),
                             tabPanel('Elimination Timeline',
                                      fluidRow(
@@ -264,7 +264,9 @@ body <- dashboardBody(
                                      
                                      fluidRow(
                                        column(width=12,
-                                              HTML('<h4>Year of elimination for the selected scenario:</h4> Countries arranged from top to bottom in alphabetical order and from right to left based on year of elimination (min, median, max). “NO” means elimination was not predicted to be achieved by 2030.'),
+                                              h4('Year of elimination for the selected scenario:'),
+                                              p('Countries arranged from top to bottom in alphabetical order and from right to left based on year of elimination (min, median, max)'), 
+                                                strong("“NO” means elimination was not predicted to be achieved by 2030 — the last year projected by the model."),
                                               plotOutput('elim_timeline', height='550px') %>% withSpinner()
                                        ))
                             ),
@@ -281,7 +283,7 @@ body <- dashboardBody(
                                      fluidRow(
                                        column(width=12,
                                               HTML('<br><br><br>'),
-                                              DT::dataTableOutput('table_elimination')))
+                                              DT::dataTableOutput('table_elimination') %>% withSpinner()))
                             )
                      )
               )
@@ -322,10 +324,10 @@ body <- dashboardBody(
                                      ),
                                      fluidRow(
                                        column(width=6,
-                                              plotOutput('boxplot_cost_total') %>% withSpinner()
+                                              plotOutput('boxplot_cost_total', height = '300px') %>% withSpinner()
                                        ),
                                        column(width=6,
-                                              plotOutput('boxplot_cost_target')
+                                              plotOutput('boxplot_cost_target', height = '300px') %>% withSpinner()
                                        )
                                      ),
                                      fluidRow(
@@ -333,7 +335,7 @@ body <- dashboardBody(
                                        #        plotOutput('plot_cost_component')
                                        # ),
                                        column(width=12,
-                                              plotOutput('plot_cost_year')
+                                              plotOutput('plot_cost_year') %>% withSpinner()
                                        )
                                      )
                                      
@@ -372,7 +374,7 @@ body <- dashboardBody(
                                      ),
                                      fluidRow(
                                        column(width=6,
-                                              plotOutput('boxplot_cost_total_mep')
+                                              plotOutput('boxplot_cost_total_mep') %>% withSpinner()
                                        ),
                                        column(width=6,
                                               sliderInput('range_cost_2', 'Years range:', min=2016, max=2030, value=c(2016, 2030), step=1, sep='')
@@ -383,7 +385,7 @@ body <- dashboardBody(
                                        #        plotOutput('plot_cost_component_mep')
                                        # ),
                                        column(width=12,
-                                              plotOutput('plot_cost_year_mep')
+                                              plotOutput('plot_cost_year_mep') %>% withSpinner()
                                        )
                                      )
                             )
