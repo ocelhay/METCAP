@@ -11,11 +11,12 @@ rm(list = ls())
 # load packages
 library(DT)
 library(leaflet)
+library(markdown)
 library(RColorBrewer)
 library(scales)
 library(shiny)
 library(shinyBS)
-library(rgeos)
+# library(rgeos)
 library(shinycssloaders)
 library(tidyverse)
 
@@ -43,38 +44,38 @@ country_codes$scenario_min_elim <- country_codes$scenario_expanded
 country_codes$scenario_min_elim[is.na(country_codes$scenario_min_elim)] <- 'Predicted elimination achieved by 2017'
 
 # list of 22 Asia-Pacific countries and subsets
-list_countries <- list("Afghanistan"="Afghanistan", 
-                       "Bangladesh"="Bangladesh", 
-                       "Bhutan"="Bhutan", 
-                       "Cambodia"="Cambodia", 
-                       "DPR Korea"="DPR Korea", 
-                       
+list_countries <- list("Afghanistan"="Afghanistan",
+                       "Bangladesh"="Bangladesh",
+                       "Bhutan"="Bhutan",
+                       "Cambodia"="Cambodia",
+                       "DPR Korea"="DPR Korea",
+
                        "India"="India",
-                       "Indonesia"="Indonesia", 
+                       "Indonesia"="Indonesia",
                        "Lao PDR"="Lao PDR",
-                       "Malaysia"="Malaysia", 
+                       "Malaysia"="Malaysia",
                        "Myanmar"="Myanmar",
-                       
-                       "Nepal"="Nepal", 
+
+                       "Nepal"="Nepal",
                        "Pakistan"="Pakistan",
-                       "Papua New Guinea"="Papua New Guinea", 
+                       "Papua New Guinea"="Papua New Guinea",
                        "People’s Republic of China"="People’s Republic of China",
-                       "Philippines"="Philippines", 
-                       
-                       "Republic of Korea"="Republic of Korea", 
-                       "Solomon Islands"="Solomon Islands", 
+                       "Philippines"="Philippines",
+
+                       "Republic of Korea"="Republic of Korea",
+                       "Solomon Islands"="Solomon Islands",
                        "Sri Lanka"="Sri Lanka",
-                       "Thailand"="Thailand", 
-                       "Timor-Leste"="Timor-Leste", 
-                       
-                       "Vanuatu"="Vanuatu", 
+                       "Thailand"="Thailand",
+                       "Timor-Leste"="Timor-Leste",
+
+                       "Vanuatu"="Vanuatu",
                        "Viet Nam"="Viet Nam")
 
 vector_countries <- names(list_countries)
 
-countries_short <- c("af", "bd", "bt", "kh", "kr", 
+countries_short <- c("af", "bd", "bt", "kh", "kr",
                      "in", "id", "la", "my", "mm",
-                     "np", "pk", "pg", "cn", "ph", 
+                     "np", "pk", "pg", "cn", "ph",
                      "kp", "sb", "lk", "th", "tl",
                      "vu", "vn")
 
@@ -84,25 +85,25 @@ flags <- c(
   "flags/bt.png",
   "flags/kh.png",
   "flags/kp.png",
-  
+
   "flags/in.png",
   "flags/id.png",
   "flags/la.png",
   "flags/my.png",
   "flags/mm.png",
-  
+
   "flags/np.png",
   "flags/pk.png",
   "flags/pg.png",
   "flags/cn.png",
   "flags/ph.png",
-  
+
   "flags/kr.png",
   "flags/sb.png",
   "flags/lk.png",
   "flags/th.png",
   "flags/tl.png",
-  
+
   "flags/vu.png",
   "flags/vn.png"
 )
